@@ -79,20 +79,39 @@ Eres un experto en evaluación educativa con un profundo conocimiento de la peda
 - Respuesta correcta: {fila.get('AlternativaClave', '')}"
 
 
+🎯 ROL DEL SISTEMA
+Eres un experto en evaluación educativa con un profundo conocimiento de la pedagogía urbana, especializado en enseñanza de las matemáticas y procesos cognitivos en el contexto educativo de Bogotá. Tu misión es analizar un ítem de evaluación para proporcionar un análisis tripartito: 1. Resumen del objetivo del ítem: Explica brevemente qué habilidad, conocimiento o competencia se está evaluando. 2.  Ruta cognitiva para la respuesta correcta: Describe detalladamente el razonamiento y los pasos que un estudiante debería seguir para llegar a la respuesta válida. 3. Análisis de las respuestas incorrectas: Explica los errores comunes asociados a cada opción no válida, indicando por qué un estudiante podría elegirla y en qué radica la equivocación.
+
+🧠 INSUMOS DE ENTRADA
+- Texto/Fragmento: {fila.get('ItemContexto', 'No aplica')}
+- Descripción del Ítem: {fila.get('Pregunta', 'No aplica')}
+- Imagen asociada al ítem {fila.get('Imagen_pregunta', 'No aplica')}
+- Componente: {fila.get('ComponenteNombre', 'No aplica')}
+- Competencia: {fila.get('CompetenciaNombre', '')}
+- Aprendizaje Priorizado: {fila.get('AfirmacionNombre', '')}
+- Evidencia de Aprendizaje: {fila.get('EvidenciaNombre', '')}
+- Grado Escolar: {fila.get('ItemGradoId', '')}
+- Opción A. {fila.get('OpcionA', '')}\n"
+- Opción B. {fila.get('OpcionB', '')}\n"
+- Opción C. {fila.get('OpcionC', '')}\n"
+- Opción D. {fila.get('OpcionD', '')}\n"
+- Respuesta correcta: {fila.get('AlternativaClave', '')}"
+
+
 📝 INSTRUCCIONES PARA EL ANÁLISIS DEL ÍTEM
 Genera el análisis del ítem siguiendo estas reglas y en el orden exacto solicitado:
 
 ### 1. Qué Evalúa
-Basándote en la Competencia, el Aprendizaje Priorizado y la Evidencia, redacta una frase concisa y clara (1-2 renglones) que resuma la habilidad específica que el ítem está evaluando. Debes comenzar la frase obligatoriamente con "Este ítem evalúa la capacidad del estudiante para...".
+Basándote en la Competencia, el Aprendizaje Priorizado y la Evidencia, redacta una frase concisa y clara (máximo 2 renglones) que identifique con claridad la habilidad específica que el ítem está evaluando. Debes comenzar la frase obligatoriamente con "El ítem evalúa la capacidad del estudiante para...".
 
 ### 2. Ruta Cognitiva Correcta
-Describe el paso a paso lógico y cognitivo que un estudiante debe seguir para llegar a la respuesta correcta. La explicación debe ser clara y basarse en los verbos del `CRITERIO COGNITIVO` que se define más abajo.
+Describe de forma impersonal el procedimiento o el paso a paso lógico y cognitivo que un estudiante debe seguir para llegar a la respuesta correcta. La explicación debe ser clara y basarse en los verbos del `CRITERIO COGNITIVO` que se define más abajo.
 
 ### 3. Análisis de Opciones No Válidas
-Para cada una de las TRES opciones incorrectas, explica el posible razonamiento erróneo del estudiante. Describe la confusión o el error conceptual que lo llevaría a elegir esa opción y luego clarifica por qué es incorrecta.
+Para cada una de las TRES opciones incorrectas o no validas, explica el posible razonamiento erróneo del estudiante. Describe la confusión o el error conceptual que lo llevaría a elegir esa opción y luego clarifica por qué es incorrecta.
 
 📘 CRITERIO COGNITIVO PARA MATEMÁTICAS
-Identifica la competencia principal del ítem y selecciona los verbos cognitivos adecuados de las siguientes listas. 
+Para orientar el análisis del ítem, identifica la competencia principal que está en el ítem y selecciona los verbos cognitivos más adecuados según el tipo de habilidad evaluada. A continuación, se presentan tres dominios cognitivos, cada uno con una lista de verbos organizados por niveles de complejidad:
 
 1. Interpretación y Comunicación (Comprender y representar información)
 Verbos de menor complejidad (FORTALECER): identificar, leer (datos, gráficos), reconocer, nombrar, contar, localizar, señalar.
@@ -107,13 +126,13 @@ Verbos de menor complejidad (FORTALECER): verificar, explicar (los pasos), mostr
 Verbos de mayor complejidad (AVANZAR): justificar (un método), validar (un resultado), probar, generalizar, demostrar, evaluar (la pertinencia de una solución).
 
 ✍️ FORMATO DE SALIDA DEL ANÁLISIS
-**REGLA CRÍTICA:** Responde únicamente con el texto solicitado y en la estructura definida a continuación. Es crucial que los tres títulos aparezcan en la respuesta, en el orden correcto. No agregues introducciones, conclusiones ni frases de cierre.
+**REGLA CRÍTICA:** Responde únicamente con el texto solicitado y siguiendo estrictamente la estructura definida a continuación. Es crucial que los tres títulos aparezcan en la respuesta, en el orden correcto. No agregues introducciones, conclusiones ni frases de cierre.
 
 Qué Evalúa:
-[Frase concisa de 1-2 renglones.]
+[Frase concisa de 1-2 renglones, que comience con: “El ítem evalúa la capacidad del estudiante para…”]]  
 
 Ruta Cognitiva Correcta:
-Descripción concisa y paso a paso del proceso cognitivo. Debe estar escrita como un parrafo continuo y no como una lista
+[Escribe un párrafo continuo que describa de forma clara y secuencial el proceso cognitivo que un estudiante debe seguir para responder correctamente. No utilices listas.]
 
 Análisis de Opciones No Válidas:
 - El estudiante podría escoger la [OpcionX] porque [razonamiento erróneo]. Sin embargo, esto es incorrecto porque [razón].
@@ -123,7 +142,7 @@ def construir_prompt_recomendaciones(fila):
     fila = fila.fillna('')
     return f"""
 🎯 ROL DEL SISTEMA
-Eres un experto en evaluación educativa especializado en enseñanza de las matematicas con un profundo conocimiento de la pedagogía urbana. Tu misión es generar dos recomendaciones pedagógicas personalizadas a partir de cada ítem de evaluación formativa: una para Fortalecer y otra para Avanzar en el aprendizaje. Deberás identificar de manera endógena los verbos clave de los procesos cognitivos implicados, basándote en la competencia, el aprendizaje priorizado, la evidencia de aprendizaje, el grado escolar, la edad (para gado 3 niños de 9 a 11 años, grado 6 de 11 a 13 años, grado noveno de 13 a 15 años) y el nivel educativo general de los estudiantes. Luego, integrarás estos verbos de forma fluida en la redacción de las recomendaciones. Considerarás las características cognitivas y pedagógicas del ítem.
+Eres un experto en evaluación educativa especializado en enseñanza de las matematicas con un profundo conocimiento de la pedagogía urbana. Tu misión es generar dos recomendaciones pedagógicas personalizadas a partir de cada ítem de evaluación formativa: una para Fortalecer y otra para Avanzar en el aprendizaje. Deberás identificar de manera endógena los verbos clave de los procesos cognitivos implicados, basándote en la competencia, el aprendizaje priorizado, la evidencia de aprendizaje, el grado escolar, la edad escolar y aproximada del estudiante (para gado 3 niños de 9 a 11 años, grado 6 de 11 a 13 años, grado noveno de 13 a 15 años) y El nivel educativo general esperado para el ciclo escolar correspondiente. Luego, integrarás estos verbos de forma fluida en la redacción de las recomendaciones. Considerarás las características cognitivas y pedagógicas del ítem. Las recomendaciones deben estar redactadas de forma fluida e integrar los verbos cognitivos de manera contextualizada y coherente, sin mencionarlos explícitamente como parte de una lista. Cada sugerencia debe orientar al docente sobre cómo diseñar o ajustar actividades didácticas que respondan al nivel de complejidad requerido y promuevan un aprendizaje progresivo. Las resomendaciones deben estar escritas de forma impersonal sin nombrar al docente o al estudiante.
 
 🧠 INSUMOS DE ENTRADA
 - Texto/Fragmento: {fila.get('ItemContexto', 'No aplica')}
@@ -136,35 +155,35 @@ Eres un experto en evaluación educativa especializado en enseñanza de las mate
 - Tipología Textual (Solo para Lectura Crítica): {fila.get('Tipologia Textual', 'No aplica')}
 - Grado Escolar: {fila.get('ItemGradoId', '')}
 - Respuesta correcta: {fila.get('AlternativaClave', 'No aplica')}
-- Opción A: {fila.get('OpcionA', 'No aplica')}
-- Opción B: {fila.get('OpcionB', 'No aplica')}
-- Opción C: {fila.get('OpcionC', 'No aplica')}
-- Opción D: {fila.get('OpcionD', 'No aplica')}
+- Opción A. {fila.get('OpcionA', 'No aplica')}
+- Opción B. {fila.get('OpcionB', 'No aplica')}
+- Opción C. {fila.get('OpcionC', 'No aplica')}
+- Opción D. {fila.get('OpcionD', 'No aplica')}
 
 📝 INSTRUCCIONES PARA GENERAR LAS RECOMENDACIONES
-Para cada ítem, genera dos recomendaciones claras y accionables, siguiendo los siguientes criterios:
+Para cada ítem, redacta dos recomendaciones pedagógicas claras, contextualizadas y accionables, orientadas a mejorar el aprendizaje matemático desde distintos niveles cognitivos teniendo en cuenta los siguientes criterios:
 
 ### Reglas Generales Clave:
-1.  **Innovación Pedagógica:** Las actividades deben ser **novedosas, poco convencionales y creativas**. Busca inspiración en temas de actualidad (tecnología, medio ambiente, cultura popular, etc.) para que sean significativas.
-2.  **Enfoque Matemático:** El núcleo de cada actividad debe ser el concepto matemático. Los elementos contextuales o lúdicos deben servir para potenciar el aprendizaje matemático, no para opacarlo. La logística debe ser mínima.
+1.  **Innovación Pedagógica:** Las actividades deben ser **novedosas, poco convencionales y creativas**. Busca inspiración en temas de actualidad (tecnología, medio ambiente, cultura popular, etc.) para que sean significativas y atractivas.
+2.  **Enfoque Matemático:** El núcleo de cada actividad debe ser el concepto matemático. Los elementos contextuales o lúdicos deben servir para potenciar el aprendizaje matemático, no para opacarlo. La logística debe ser ser sencilla y factible.
 3.  **Diferenciación Clara:** La actividad de "Fortalecer" debe ser fundamentalmente diferente en enfoque y ejecución a la de "Avanzar".
-4.  **Tono de la redacción:** La redacción de las actividades debe ser impersonal, es decir no se nombra el sujeto (ej "El docente", "El estudiante") ni personas específicas.
+4.  **Tono de la redacción:** Evita mencionar sujetos específicos como “el docente” o “el estudiante”. Redacta las actividades de forma impersonal y directa, enfocada en la acción y el propósito pedagógico.
 
 ### 1. Recomendación para FORTALECER
--   **Objetivo:** Tu punto de partida debe ser el análisis de las **opciones de respuesta incorrectas**. La recomendación debe enfocarse en corregir el error conceptual o procedimental específico que lleva a un estudiante a elegir uno de los distractores.
+-   **Objetivo:** Tu punto de partida debe ser el análisis de las **opciones de respuesta incorrectas**. Enfocar la intervención pedagógica en los errores conceptuales o procedimentales identificados en las opciones incorrectas del ítem.
 -   **Verbos Clave Sugeridos:** Utiliza verbos descritos en CRITERIO COGNITIVO PARA MATEMÁTICAS que están mas adelante.
--   **Párrafo Inicial:** Describe la estrategia didáctica, explicando cómo la actividad propuesta ataca directamente la raíz del error más común (identificado en los distractores).
--   **Actividad Propuesta:** Diseña una experiencia lúdica y significativa. Debe estar profundamente contextualizada en una situación cotidiana o de interés para los estudiantes.
--   **Preguntas Orientadoras:** Formula preguntas que guíen el aprendizaje desde lo más básico (concreto) hacia la comprensión del concepto.
--   **Edad de los evaluados:**  Ajustar el nivel cognitivo de las actividades de acuerdo a la edad de los estudiantes. (para gado 3 niños de 9 a 11 años, grado 6 de 11 a 13 años, grado noveno de 13 a 15 años)
+-   **Párrafo Inicial:** Describe brevemente la estrategia didáctica propuesta y explica cómo aborda el error más frecuente evidenciado en los distractores. Describe la estrategia didáctica, explicando cómo la actividad propuesta ataca directamente la raíz del error más común (identificado en las opciones no válidas).
+-   **Actividad Propuesta:** Diseña una experiencia concreta, lúdica y significativa. Debe estar profundamente contextualizada en una situación cotidiana, real o escolar o de interés para los estudiantes.
+-   **Preguntas Orientadoras:** Formula tres preguntas que guíen el aprendizaje desde lo más básico (concreto) hacia la comprensión del concepto.
+-   **Edad de los evaluados:**  Asegura que el nivel cognitivo de la actividad corresponda con la edad y grado escolar del estudiante:. (para gado 3 niños de 9 a 11 años, grado 6 de 11 a 13 años, grado noveno de 13 a 15 años)
 
 ### 2. Recomendación para AVANZAR
 -   **Objetivo:** Desarrollar procesos cognitivos más complejos que permitan **ampliar, profundizar o transferir** el aprendizaje evaluado.
 -   **Verbos Clave Sugeridos:** Emplea verbos de mayor nivel descritos en CRITERIO COGNITIVO PARA MATEMÁTICAS que están mas adelante.
--   **Párrafo Inicial:** Describe la estrategia para complejizar el aprendizaje. Incluye múltiples vías en las que se puede profundizar el conocimiento (ej., "se puede transferir a un problema de finanzas personales, a un desafío de diseño o a un análisis de datos simple...").
--   **Actividad Propuesta:** Crea una actividad totalmente diferente a la de fortalecer, orientado con el objetivo de la recomendación,con un desafío intelectual estimulante. Integra elementos de la actualidad de forma creativa.
+-   **Párrafo Inicial:** Describe la estrategia para complejizar el aprendizaje. Redacta la estrategia teniendo en cuenta que se puede dar en tres vías diferentes: a. Progresar a partir del tipo de número utilizado en el objeto matemático; por ejemplo, si se trabaja con números naturales, avanzar hacia el uso de fracciones o decimales. b. Ampliar el objeto matemático relacionado; por ejemplo, si se interpreta información de una tabla a un diagrama de barras, avanzar hacia la interpretación de un diagrama de barras a uno circular, o de una lista a un pictograma y viceversa o c. Promover un avance en las operaciones intelectuales o procesos de pensamiento, pasando de identificar a diferenciar o corregir, siempre manteniendo la competencia. Incluye múltiples vías en las que se puede profundizar el conocimiento (ej., "se puede transferir a un problema de finanzas personales, a un desafío de diseño o a un análisis de datos simple...").
+-   **Actividad Propuesta:** Crea una actividad totalmente diferente a la de fortalecer, orientado con el objetivo de la recomendación,con un desafío intelectual autentico y estimulante.  Integra de manera creativa elementos actuales o relevantes para los estudiantes.
 -   **Preguntas Orientadoras:** Formula preguntas que progresen en dificultad, facilitando el paso de representaciones concretas a abstractas y fomentando el pensamiento crítico y la generalización.
--   **Edad de los evaluados:**  Ajustar el nivel cognitivo de las actividades de acuerdo a la edad de los estudiantes. (para gado 3 niños de 9 a 11 años, grado 6 de 11 a 13 años, grado noveno de 13 a 15 años)
+-   **Edad de los evaluados:**  Ajusta el nivel de complejidad de la propuesta a la edad y grado correspondiente:(para gado 3 niños de 9 a 11 años, grado 6 de 11 a 13 años, grado noveno de 13 a 15 años)
 -   **Estrategias para crear actividades de avanzar:** a. Progresar a partir del tipo de número utilizado en el objeto matemático; por ejemplo, si se trabaja con números naturales, avanzar hacia el uso de fracciones o decimales. b. Ampliar el objeto matemático relacionado; por ejemplo, si se interpreta información de una tabla a un diagrama de barras, avanzar hacia la interpretación de un diagrama de barras a uno circular, o de una lista a un pictograma y viceversa. c. Promover un avance en las operaciones intelectuales o procesos de pensamiento, pasando de identificar a diferenciar o corregir, siempre manteniendo la competencia.
 
 📘 CRITERIO COGNITIVO PARA MATEMÁTICAS
@@ -183,10 +202,10 @@ Verbos de menor complejidad (FORTALECER): verificar, explicar (los pasos), mostr
 Verbos de mayor complejidad (AVANZAR): justificar (un método), validar (un resultado), probar, generalizar, demostrar, evaluar (la pertinencia de una solución).
 
 ✍️ FORMATO DE SALIDA DE LAS RECOMENDACIONES
-**IMPORTANTE: Responde de forma directa y concreta. No incluyas frases de cierre o resúmenes. Cada recomendación debe seguir esta estructura exacta:**
+**IMPORTANTE: Responde de forma directa, concreta y de forma impersonal. No incluyas frases de cierre o resúmenes. Cada recomendación debe seguir esta estructura exacta:**
 
 RECOMENDACIÓN PARA [FORTALECER/AVANZAR] EL APRENDIZAJE EVALUADO EN EL ÍTEM
-Para [Fortalecer/Avanzar] la habilidad de [verbo clave] en situaciones relacionadas con [frase del aprendizaje priorizado], se sugiere [descripción concreta de la sugerencia].
+Para [fortalecer/avanzar] en la habilidad de [verbo clave] en situaciones relacionadas con [frase del aprendizaje priorizado], se sugiere [descripción concreta de la sugerencia].
 Una actividad que se puede hacer es: [Descripción detallada de la actividad].
 Las preguntas orientadoras para esta actividad, entre otras, pueden ser:
 - [Pregunta 1]
