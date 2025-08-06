@@ -64,17 +64,21 @@ def construir_prompt_analisis(fila):
 Eres un experto en evaluación educativa con un profundo conocimiento de la pedagogía urbana, especializado en lectura y procesos cognitivos en el contexto de Bogotá. Tu misión es analizar un ítem de evaluación para proporcionar un análisis tripartito: un resumen de lo que evalúa, la ruta cognitiva detallada para la respuesta correcta, y un análisis de los errores asociados a las opciones incorrectas.
 
 🧠 INSUMOS DE ENTRADA
-- Descripción del Ítem: {descripcion_item}
+- Texto/Fragmento: {fila.get('ItemContexto', 'No aplica')}
+- Descripción del Ítem: {fila.get('Pregunta', 'No aplica')}
+- Imagen asociada al ítem {fila.get('Imagen_pregunta', 'No aplica')}
 - Componente: {fila.get('ComponenteNombre', 'No aplica')}
 - Competencia: {fila.get('CompetenciaNombre', '')}
 - Aprendizaje Priorizado: {fila.get('AfirmacionNombre', '')}
 - Evidencia de Aprendizaje: {fila.get('EvidenciaNombre', '')}
+- Tipología Textual (Solo para Lectura Crítica): {fila.get('Tipologia Textual', 'No aplica')}
 - Grado Escolar: {fila.get('ItemGradoId', '')}
-- Respuesta correcta: {fila.get('AlternativaClave', 'No aplica')}
-- Opción A: {fila.get('OpcionA', 'No aplica')}
-- Opción B: {fila.get('OpcionB', 'No aplica')}
-- Opción C: {fila.get('OpcionC', 'No aplica')}
-- Opción D: {fila.get('OpcionD', 'No aplica')}
+-Opción A. {fila.get('OpcionA', '')}\n"
+-Opción B. {fila.get('OpcionB', '')}\n"
+-Opción C. {fila.get('OpcionC', '')}\n"
+-Opción D. {fila.get('OpcionD', '')}\n"
+-Respuesta correcta: {fila.get('AlternativaClave', '')}"
+
 
 📝 INSTRUCCIONES PARA EL ANÁLISIS DEL ÍTEM
 Genera el análisis del ítem siguiendo estas reglas y en el orden exacto solicitado:
@@ -88,11 +92,20 @@ Describe el paso a paso lógico y cognitivo que un estudiante debe seguir para l
 ### 3. Análisis de Opciones No Válidas
 Para cada una de las TRES opciones incorrectas, explica el posible razonamiento erróneo del estudiante. Describe la confusión o el error conceptual que lo llevaría a elegir esa opción y luego clarifica por qué es incorrecta.
 
-📘 CRITERIO COGNITIVO SEGÚN NIVEL DE LECTURA
-(Debes usar estos verbos para fundamentar la "Ruta Cognitiva Correcta")
--   **Lectura Literal:** reconocer, señalar, localizar, nombrar, enumerar, identificar, clasificar, relacionar, describir.
--   **Lectura Inferencial:** inferir, interpretar, predecir, deducir, completar, explicar, formular, estimar, comparar, sintetizar.
--   **Lectura Crítica:** analizar, cuestionar, contrastar, evaluar, justificar, opinar, argumentar, valorar, proponer.
+📘 CRITERIO COGNITIVO PARA MATEMÁTICAS
+Identifica la competencia principal del ítem y selecciona los verbos cognitivos adecuados de las siguientes listas. Para FORTALECER, elige un verbo que refleje un proceso fundamental o de entrada. Para AVANZAR, selecciona un verbo que implique una mayor elaboración o transferencia del conocimiento.
+
+1. Interpretación y Comunicación (Comprender y representar información)
+Verbos de menor complejidad (FORTALECER): identificar, leer (datos, gráficos), reconocer, nombrar, contar, localizar, señalar.
+Verbos de mayor complejidad (AVANZAR): representar (en gráficos, tablas), describir, comparar, clasificar, organizar, traducir (de lenguaje verbal a matemático).
+
+2. Formulación y Solución de Problemas (Aplicar procedimientos y estrategias)
+Verbos de menor complejidad (FORTALECER): calcular, medir, aplicar (una fórmula), resolver (operaciones directas), completar (secuencias), usar (un algoritmo).
+Verbos de mayor complejidad (AVANZAR): formular (un plan o ecuación), plantear, modelar, diseñar (una estrategia), optimizar, descomponer (un problema).
+
+3. Argumentación (Justificar y validar procesos y resultados)
+Verbos de menor complejidad (FORTALECER): verificar, explicar (los pasos), mostrar, relacionar, ejemplificar.
+Verbos de mayor complejidad (AVANZAR): justificar (un método), validar (un resultado), probar, generalizar, demostrar, evaluar (la pertinencia de una solución).
 
 ✍️ FORMATO DE SALIDA DEL ANÁLISIS
 **REGLA CRÍTICA:** Responde únicamente con el texto solicitado y en la estructura definida a continuación. Es crucial que los tres títulos aparezcan en la respuesta, en el orden correcto. No agregues introducciones, conclusiones ni frases de cierre.
@@ -115,14 +128,14 @@ Eres un experto en evaluación educativa con un profundo conocimiento de la peda
 
 🧠 INSUMOS DE ENTRADA
 - Texto/Fragmento: {fila.get('ItemContexto', 'No aplica')}
-- Descripción del Ítem: {fila.get('ItemEnunciado', 'No aplica')}
+- Descripción del Ítem: {fila.get('Pregunta', 'No aplica')}
+- Imagen asociada al ítem {fila.get('Imagen_pregunta', 'No aplica')}
 - Componente: {fila.get('ComponenteNombre', 'No aplica')}
 - Competencia: {fila.get('CompetenciaNombre', '')}
 - Aprendizaje Priorizado: {fila.get('AfirmacionNombre', '')}
 - Evidencia de Aprendizaje: {fila.get('EvidenciaNombre', '')}
 - Tipología Textual (Solo para Lectura Crítica): {fila.get('Tipologia Textual', 'No aplica')}
 - Grado Escolar: {fila.get('ItemGradoId', '')}
-- Análisis de Errores Comunes: {fila.get('Analisis_Errores', 'No aplica')}
 - Respuesta correcta: {fila.get('AlternativaClave', 'No aplica')}
 - Opción A: {fila.get('OpcionA', 'No aplica')}
 - Opción B: {fila.get('OpcionB', 'No aplica')}
@@ -132,50 +145,50 @@ Eres un experto en evaluación educativa con un profundo conocimiento de la peda
 📝 INSTRUCCIONES PARA GENERAR LAS RECOMENDACIONES
 Para cada ítem, genera dos recomendaciones claras y accionables, siguiendo los siguientes criterios:
 
-### General:
-Las actividades deben ser cortas, puntuales y de fácil implementación, concentrándose en un solo proceso cognitivo específico. La progresión entre "Fortalecer" y "Avanzar" debe ser clara y coherente. **IMPORTANTE: Las actividades deben centrarse exclusivamente en procesos de lectura y comprensión, sin incluir componentes de escritura, producción textual o similares.**
+### Reglas Generales Clave:
+1.  **Innovación Pedagógica:** Las actividades deben ser **novedosas, poco convencionales y creativas**. Busca inspiración en temas de actualidad (tecnología, medio ambiente, cultura popular, etc.) para que sean significativas.
+2.  **Enfoque Matemático:** El núcleo de cada actividad debe ser el concepto matemático. Los elementos contextuales o lúdicos deben servir para potenciar el aprendizaje matemático, no para opacarlo. La logística debe ser mínima.
+3.  **Diferenciación Clara:** La actividad de "Fortalecer" debe ser fundamentalmente diferente en enfoque y ejecución a la de "Avanzar".
 
 ### 1. Recomendación para FORTALECER
-- **Objetivo:** Reforzar un único proceso cognitivo básico esencial para la resolución del ítem.
-- **Identificación de Verbos Clave:** Deducir verbos de procesos cognitivos de nivel simple 
-- **Párrafo Inicial:** Describe la estrategia didáctica general.
-- **Actividad Propuesta:** Diseña una actividad corta, puntual y de fácil implementación que sea novedosa, creativa y divertida. Debe ser lúdica, significativa y profundamente contextualizada . La actividad debe centrarse en el proceso cognitivo principal a fortalecer, utilizando herramientas a mano del docente y sin requerir preparación logística extensa o la gestión de proyectos complejos.  **Exclusivamente de lectura, sin escritura.**
-- **La actividad Propuesta NO debe ser demasiado específica y hablar acerca del contenido del ítem analizado. Debe ser pensado sobre lecturas mas generales.
-- **La actividad Propuesta NO debe tener nada de producción escrita ni de creación de contenidos. Debe enfocarse en lectura.
-- **Preguntas Orientadoras:** Formula preguntas que guíen el proceso cognitivo.
+-   **Objetivo:** Tu punto de partida debe ser el análisis de las **opciones de respuesta incorrectas**. La recomendación debe enfocarse en corregir el error conceptual o procedimental específico que lleva a un estudiante a elegir uno de los distractores.
+-   **Verbos Clave Sugeridos:** Utiliza verbos de procesos simples como **identificar, observar, agrupar, describir, representar, reconocer, contar, medir**.
+-   **Párrafo Inicial:** Describe la estrategia didáctica, explicando cómo la actividad propuesta ataca directamente la raíz del error más común (identificado en los distractores).
+-   **Actividad Propuesta:** Diseña una experiencia lúdica y significativa. Debe estar profundamente contextualizada en una situación cotidiana o de interés para los estudiantes.
+-   **Preguntas Orientadoras:** Formula preguntas que guíen el aprendizaje desde lo más básico (concreto) hacia la comprensión del concepto.
 
 ### 2. Recomendación para AVANZAR
-- **Objetivo:** Desarrollar un único proceso cognitivo de nivel más complejo.
-- **Identificación de Verbos Clave:** Deducir verbos de procesos cognitivos de mayor nivel 
-- **Párrafo Inicial:** Describe la estrategia general para complejizar el aprendizaje.
-- **Actividad Propuesta:** Crea una actividad corta, puntual y de fácil implementación, totalmente diferente a la de fortalecer, con desafíos intelectuales estimulantes y atractivos. Integra elementos de la actualidad. La actividad debe centrarse en el proceso cognitivo principal a desarrollar, utilizando herramientas a mano del docente y sin requerir preparación logística extensa o la gestión de proyectos complejos.  **Exclusivamente de lectura y comprensión, sin producción textual, obras de teatro o similares.**
-- **La actividad Propuesta NO debe ser demasiado específica y hablar acerca del contenido del ítem analizado. Debe ser pensado sobre lecturas mas generales.
-- **La actividad Propuesta NO debe tener nada de producción escrita ni de creación de contenidos. Debe enfocarse en lectura.
-- **Preguntas Orientadoras:** Formula preguntas que progresen en dificultad.
+-   **Objetivo:** Desarrollar procesos cognitivos más complejos que permitan **ampliar, profundizar o transferir** el aprendizaje evaluado.
+-   **Verbos Clave Sugeridos:** Emplea verbos de mayor nivel cognitivo como **argumentar, generalizar, justificar, modelar, transferir, analizar, sintetizar, evaluar, proponer, optimizar**.
+-   **Párrafo Inicial:** Describe la estrategia para complejizar el aprendizaje. Incluye múltiples vías en las que se puede profundizar el conocimiento (ej., "se puede transferir a un problema de finanzas personales, a un desafío de diseño o a un análisis de datos simple...").
+-   **Actividad Propuesta:** Crea una actividad totalmente diferente a la de fortalecer, con un desafío intelectual estimulante. Integra elementos de la actualidad de forma creativa.
+-   **Preguntas Orientadoras:** Formula preguntas que progresen en dificultad, facilitando el paso de representaciones concretas a abstractas y fomentando el pensamiento crítico y la generalización.
 
-📘 CRITERIO COGNITIVO SEGÚN NIVEL DE LECTURA
-Identifica el nivel de lectura a partir del campo "Componente" y selecciona los **verbos cognitivos adecuados** de las siguientes listas. Para **FORTALECER**, elige uno de los verbos más simples del nivel correspondiente. Para **AVANZAR**, selecciona un verbo más elaborado del mismo nivel, asegurando una progresión clara.
+¡Claro que sí! Es una excelente idea adaptar el criterio cognitivo para el área de matemáticas.
 
-1.  **Lectura Literal** (nivel bajo):
-    -   Verbos de menor complejidad (FORTALECER): reconocer, señalar, localizar, nombrar, enumerar, identificar.
-    -   Verbos de mayor complejidad (AVANZAR): clasificar, relacionar, describir. 
+Aquí tienes una propuesta que sigue la misma estructura, pero se enfoca en las competencias de Interpretación, Solución de Problemas y Argumentación.
 
-2.  **Lectura Inferencial** (nivel medio):
-    -   Verbos de menor complejidad (FORTALECER): inferir, interpretar, predecir, deducir, completar.
-    -   Verbos de mayor complejidad (AVANZAR): explicar, formular, estimar, comparar, sintetizar.
+📘 CRITERIO COGNITIVO PARA MATEMÁTICAS
+Identifica la competencia principal del ítem y selecciona los verbos cognitivos adecuados de las siguientes listas. Para FORTALECER, elige un verbo que refleje un proceso fundamental o de entrada. Para AVANZAR, selecciona un verbo que implique una mayor elaboración o transferencia del conocimiento.
 
-3.  **Lectura Crítica** (nivel alto):
-    -   Verbos de menor complejidad (FORTALECER): analizar, cuestionar, contrastar.
-    -   Verbos de mayor complejidad (AVANZAR): evaluar, justificar, opinar, argumentar, valorar, proponer.
+1. Interpretación y Comunicación (Comprender y representar información)
+Verbos de menor complejidad (FORTALECER): identificar, leer (datos, gráficos), reconocer, nombrar, contar, localizar, señalar.
+Verbos de mayor complejidad (AVANZAR): representar (en gráficos, tablas), describir, comparar, clasificar, organizar, traducir (de lenguaje verbal a matemático).
+
+2. Formulación y Solución de Problemas (Aplicar procedimientos y estrategias)
+Verbos de menor complejidad (FORTALECER): calcular, medir, aplicar (una fórmula), resolver (operaciones directas), completar (secuencias), usar (un algoritmo).
+Verbos de mayor complejidad (AVANZAR): formular (un plan o ecuación), plantear, modelar, diseñar (una estrategia), optimizar, descomponer (un problema).
+
+3. Argumentación (Justificar y validar procesos y resultados)
+Verbos de menor complejidad (FORTALECER): verificar, explicar (los pasos), mostrar, relacionar, ejemplificar.
+Verbos de mayor complejidad (AVANZAR): justificar (un método), validar (un resultado), probar, generalizar, demostrar, evaluar (la pertinencia de una solución).
 
 ✍️ FORMATO DE SALIDA DE LAS RECOMENDACIONES
-**IMPORTANTE: Responde de forma directa y concreta. No incluyas frases de cierre, resúmenes, reflexiones pedagógicas ni conclusiones al final de cada recomendación (Fortalecer y Avanzar). Termina directamente con la lista de preguntas.**
-
-Las recomendaciones deben presentarse con la siguiente estructura y tono de redacción para cada apartado (Fortalecer y Avanzar):
+**IMPORTANTE: Responde de forma directa y concreta. No incluyas frases de cierre o resúmenes. Cada recomendación debe seguir esta estructura exacta:**
 
 RECOMENDACIÓN PARA [FORTALECER/AVANZAR] EL APRENDIZAJE EVALUADO EN EL ÍTEM
 Para [Fortalecer/Avanzar] la habilidad de [verbo clave] en situaciones relacionadas con [frase del aprendizaje priorizado], se sugiere al docente [descripción concreta de la sugerencia].
-Una actividad que se puede hacer es: [Descripción detallada de la actividad].
+Una actividad que se puede hacer es: "[Nombre atractivo de la actividad]": [Descripción detallada de la actividad].
 Las preguntas orientadoras para esta actividad, entre otras, pueden ser:
 - [Pregunta 1]
 - [Pregunta 2]
