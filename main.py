@@ -46,7 +46,7 @@ def setup_model(api_key):
         st.error(f"Error al configurar la API de Google: {e}")
         return None
 
-def construir_prompt_analisis(fila):
+def construir_prompt_analisis(fila, prompt_adicional=""):
     fila = fila.fillna('')
     descripcion_item = (
         f"Enunciado: {fila.get('Enunciado', '')}\n"
@@ -135,7 +135,7 @@ Análisis de Opciones No Válidas:
 - El estudiante podría escoger la [OpcionX] porque [razonamiento erróneo]. Sin embargo, esto es incorrecto porque [razón].
 """
 
-def construir_prompt_recomendaciones(fila):
+def construir_prompt_recomendaciones(fila, prompt_adicional=""):
     fila = fila.fillna('')
     return f"""
 🎯 ROL DEL SISTEMA
