@@ -241,12 +241,12 @@ st.header("Paso 1.5 (Opcional): Refina los Prompts de la IA")
 with st.expander("Haz clic aquí para añadir instrucciones personalizadas a los prompts"):
     prompt_adicional_analisis = st.text_area(
         "Instrucciones adicionales para el ANÁLISIS DEL ÍTEM:",
-        placeholder="Ej: 'Enfatizar en el análisis de la opción C' o 'Asegurarse de que la ruta cognitiva mencione el teorema de Pitágoras'.",
+        placeholder="-Qué evalúa; -Ruta cognitiva para responder el ítem ; -Análisis de las no válidas",
         height=100
     )
     prompt_adicional_recomendaciones = st.text_area(
         "Instrucciones adicionales para las RECOMENDACIONES:",
-        placeholder="Ej: 'Todas las actividades deben estar relacionadas con deportes' o 'Evitar el uso de material audiovisual'.",
+        placeholder="-Recomendaciones para fortalecer; -Recomendaciones para avanzar",
         height=100
     )
 
