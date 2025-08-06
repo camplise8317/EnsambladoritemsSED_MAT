@@ -170,7 +170,8 @@ Para cada ítem, redacta dos recomendaciones pedagógicas claras, contextualizad
 4.  **Tono de la redacción:** Evita mencionar sujetos específicos como “el docente” o “el estudiante”. Redacta las actividades de forma impersonal y directa, enfocada en la acción y el propósito pedagógico.
 
 ### 1. Recomendación para FORTALECER
--   **Objetivo:** Tu punto de partida debe ser el análisis de las **opciones de respuesta incorrectas**. Enfocar la intervención pedagógica en los errores conceptuales o procedimentales identificados en las opciones incorrectas del ítem.
+-   **Objetivo:**  Reforzar los procesos cognitivos básico esenciales para la resolución del ítem. 
+-   **Tener en cuenta:**. Se pueden tener en cuenta , pero no limitarse a, las **opciones de respuesta incorrectas**. Tener en cuenta los errores conceptuales o procedimentales identificados en las opciones incorrectas del ítem. Considerar adicionalmente el alcance que tiene el aprendizaje priorizado y la evidencia de aprendizaje mas allá del ítem.
 -   **Verbos Clave Sugeridos:** Utiliza verbos descritos en CRITERIO COGNITIVO PARA MATEMÁTICAS que están mas adelante.
 -   **Párrafo Inicial:** Describe brevemente la estrategia didáctica propuesta y explica cómo aborda el error más frecuente evidenciado en los distractores. Describe la estrategia didáctica, explicando cómo la actividad propuesta ataca directamente la raíz del error más común (identificado en las opciones no válidas).
 -   **Actividad Propuesta:** Diseña una experiencia concreta, lúdica y significativa. Debe estar profundamente contextualizada en una situación cotidiana, real o escolar o de interés para los estudiantes.
