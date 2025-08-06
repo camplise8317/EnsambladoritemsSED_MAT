@@ -15,9 +15,8 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- FUNCIONES DE LÓGICA ---
+# --- FUNCIONES DE LÓGICA (sin cambios) ---
 
-# Función para limpiar HTML (de tu código original)
 def limpiar_html(texto_html):
     if not isinstance(texto_html, str):
         return texto_html
@@ -25,7 +24,6 @@ def limpiar_html(texto_html):
     texto_limpio = re.sub(cleanr, '', texto_html)
     return texto_limpio
 
-# Función para configurar el modelo Gemini
 def setup_model(api_key):
     try:
         genai.configure(api_key=api_key)
@@ -48,7 +46,6 @@ def setup_model(api_key):
         st.error(f"Error al configurar la API de Google: {e}")
         return None
 
-# Funciones para construir prompts (adaptadas de tu código)
 def construir_prompt_analisis(fila):
     fila = fila.fillna('')
     descripcion_item = (
@@ -216,13 +213,12 @@ Las preguntas orientadoras para esta actividad, entre otras, pueden ser:
 - [Pregunta 5]
 """
 
-
-# --- INTERFAZ PRINCIPAL DE STREAMLIT ---
+# --- INTERFAZ PRINCIPAL DE STREAMLIT (CON MODIFICACIONES) ---
 
 st.title("🤖 Ensamblador de Fichas Técnicas con IA")
 st.markdown("Una aplicación para enriquecer datos pedagógicos y generar fichas personalizadas.")
 
-# Inicializar session_state para guardar los datos entre ejecuciones
+# Inicializar session_state
 if 'df_enriquecido' not in st.session_state:
     st.session_state.df_enriquecido = None
 if 'zip_buffer' not in st.session_state:
@@ -240,9 +236,27 @@ with col1:
 with col2:
     archivo_plantilla = st.file_uploader("Sube tu Plantilla de Word", type=["docx"])
 
+# --- NUEVO: PASO 1.5: Prompts Adicionales (Opcional) ---
+st.header("Paso 1.5 (Opcional): Refina los Prompts de la IA")
+with st.expander("Haz clic aquí para añadir instrucciones personalizadas a los prompts"):
+    prompt_adicional_analisis = st.text_area(
+        "Instrucciones adicionales para el ANÁLISIS DEL ÍTEM:",
+        placeholder="Ej: 'Enfatizar en el análisis de la opción C' o 'Asegurarse de que la ruta cognitiva mencione el teorema de Pitágoras'.",
+        height=100
+    )
+    prompt_adicional_recomendaciones = st.text_area(
+        "Instrucciones adicionales para las RECOMENDACIONES:",
+        placeholder="Ej: 'Todas las actividades deben estar relacionadas con deportes' o 'Evitar el uso de material audiovisual'.",
+        height=100
+    )
+
+
 # --- PASO 2: Enriquecimiento con IA ---
 st.header("Paso 2: Enriquece tus Datos con IA")
 if st.button("🤖 Iniciar Análisis y Generación", disabled=(not api_key or not archivo_excel)):
+    # ... (El resto del código del botón y los pasos 3, 4, y 5 se mantienen igual)
+    # PERO se deben pasar los prompts adicionales a las funciones de generación
+    
     if not api_key:
         st.error("Por favor, ingresa tu clave API en la barra lateral izquierda.")
     elif not archivo_excel:
@@ -250,9 +264,18 @@ if st.button("🤖 Iniciar Análisis y Generación", disabled=(not api_key or no
     else:
         model = setup_model(api_key)
         if model:
+            # (El resto del código de esta sección se mantiene igual, 
+            # solo asegúrate de pasar los prompts adicionales al llamar a las funciones)
+            # Ejemplo de cómo se llamaría la función dentro del bucle:
+            # prompt = construir_prompt_analisis(fila, prompt_adicional_analisis)
+            # ...
+            # y
+            # prompt = construir_prompt_recomendaciones(fila, prompt_adicional_recomendaciones)
+            # ...
+            # A continuación el código completo de esta sección:
+
             with st.spinner("Procesando archivo Excel y preparando datos..."):
                 df = pd.read_excel(archivo_excel)
-                # Limpieza de HTML
                 for col in df.columns:
                     if df[col].dtype == 'object':
                         df[col] = df[col].apply(limpiar_html)
@@ -261,15 +284,17 @@ if st.button("🤖 Iniciar Análisis y Generación", disabled=(not api_key or no
             total_filas = len(df)
             
             # Proceso de Análisis
-            with st.spinner("Generando Análisis de Ítems... Esto puede tardar varios minutos."):
+            with st.spinner("Generando Análisis de Ítems..."):
+                # ... (código interno sin cambios, solo la llamada a la función)
+                # ...
                 que_evalua_lista, just_correcta_lista, an_distractores_lista = [], [], []
                 progress_bar_analisis = st.progress(0, text="Iniciando Análisis...")
                 for i, fila in df.iterrows():
-                    prompt = construir_prompt_analisis(fila)
+                    prompt = construir_prompt_analisis(fila, prompt_adicional_analisis)
+                    # (El resto del try/except se mantiene igual)
                     try:
                         response = model.generate_content(prompt)
                         texto_completo = response.text.strip()
-                        # Separación robusta
                         header_que_evalua = "Qué Evalúa:"
                         header_correcta = "Ruta Cognitiva Correcta:"
                         header_distractores = "Análisis de Opciones No Válidas:"
@@ -286,7 +311,7 @@ if st.button("🤖 Iniciar Análisis y Generación", disabled=(not api_key or no
                     just_correcta_lista.append(just_correcta)
                     an_distractores_lista.append(an_distractores)
                     progress_bar_analisis.progress((i + 1) / total_filas, text=f"Analizando Ítem {i+1}/{total_filas}")
-                    time.sleep(1) # Control de velocidad de la API
+                    time.sleep(1)
                 
                 df["Que_Evalua"] = que_evalua_lista
                 df["Justificacion_Correcta"] = just_correcta_lista
@@ -294,15 +319,17 @@ if st.button("🤖 Iniciar Análisis y Generación", disabled=(not api_key or no
                 st.success("Análisis de Ítems completado.")
 
             # Proceso de Recomendaciones
-            with st.spinner("Generando Recomendaciones Pedagógicas... Esto también puede tardar."):
+            with st.spinner("Generando Recomendaciones Pedagógicas..."):
+                # ... (código interno sin cambios, solo la llamada a la función)
+                # ...
                 fortalecer_lista, avanzar_lista = [], []
                 progress_bar_recom = st.progress(0, text="Iniciando Recomendaciones...")
                 for i, fila in df.iterrows():
-                    prompt = construir_prompt_recomendaciones(fila)
+                    prompt = construir_prompt_recomendaciones(fila, prompt_adicional_recomendaciones)
+                    # (El resto del try/except se mantiene igual)
                     try:
                         response = model.generate_content(prompt)
                         texto_completo = response.text.strip()
-                        # Separación robusta
                         titulo_avanzar = "RECOMENDACIÓN PARA AVANZAR"
                         idx_avanzar = texto_completo.upper().find(titulo_avanzar)
                         if idx_avanzar != -1:
@@ -317,22 +344,20 @@ if st.button("🤖 Iniciar Análisis y Generación", disabled=(not api_key or no
                     fortalecer_lista.append(fortalecer)
                     avanzar_lista.append(avanzar)
                     progress_bar_recom.progress((i + 1) / total_filas, text=f"Generando Recomendación {i+1}/{total_filas}")
-                    time.sleep(1) # Control de velocidad
+                    time.sleep(1)
 
                 df["Recomendacion_Fortalecer"] = fortalecer_lista
                 df["Recomendacion_Avanzar"] = avanzar_lista
                 st.success("Recomendaciones generadas con éxito.")
             
-            # Guardar el resultado en el estado de la sesión
             st.session_state.df_enriquecido = df
             st.balloons()
 
-# --- PASO 3: Vista Previa y Verificación ---
+# --- PASOS 3, 4 Y 5 (sin cambios) ---
 if st.session_state.df_enriquecido is not None:
     st.header("Paso 3: Verifica los Datos Enriquecidos")
     st.dataframe(st.session_state.df_enriquecido.head())
     
-    # Opción para descargar el Excel enriquecido
     output_excel = BytesIO()
     with pd.ExcelWriter(output_excel, engine='openpyxl') as writer:
         st.session_state.df_enriquecido.to_excel(writer, index=False, sheet_name='Datos Enriquecidos')
@@ -345,7 +370,6 @@ if st.session_state.df_enriquecido is not None:
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
 
-# --- PASO 4: Ensamblaje de Fichas ---
 if st.session_state.df_enriquecido is not None:
     st.header("Paso 4: Ensambla las Fichas Técnicas")
     if not archivo_plantilla:
@@ -386,7 +410,6 @@ if st.session_state.df_enriquecido is not None:
                     st.session_state.zip_buffer = zip_buffer
                     st.success("¡Ensamblaje completado!")
 
-# --- PASO 5: Descarga Final ---
 if st.session_state.zip_buffer:
     st.header("Paso 5: Descarga el Resultado Final")
     st.download_button(
